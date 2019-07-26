@@ -1,0 +1,21 @@
+---
+# tasks file for maven
+
+- name: Ensure Maven is installed.
+  package:
+    name: maven
+    state: present
+
+# Environment setup.
+- name: Set MAVEN env variables if configured.
+  template:
+    src: maven.sh.j2
+    dest: /etc/profile.d/maven.sh
+    mode: 0644
+  when: maven_home is defined and maven_home
+
+- name: Ensure maven is well installed
+  shell: mvn -version
+  register: check
+
+- debug: var=check.stdout_lines
